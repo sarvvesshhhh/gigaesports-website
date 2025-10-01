@@ -1,0 +1,88 @@
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 6rem 4rem;
+  height: 600px; /* You can adjust this height */
+  color: white;
+  
+  /* This creates the background image with a dark gradient overlay */
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+    url('/images/hero-background.jpg');
+  
+  background-size: cover;
+  background-position: center;
+}
+
+.heroContent {
+  max-width: 600px;
+}
+
+.title {
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.title span {
+  color: #e13737; /* Your red accent color */
+}
+
+.subtitle {
+  font-size: 1.1rem; /* 18px */
+  color: #a0a0a0;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.primaryButton, .secondaryButton {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.primaryButton {
+  background-color: #e13737;
+  color: white;
+}
+
+.primaryButton:hover {
+  filter: brightness(1.2);
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: white;
+  border: 1px solid #444;
+}
+
+.secondaryButton:hover {
+  background-color: #ffffff;
+  color: #121212;
+}
+
+.stats {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.9rem;
+}
+
+.stats p {
+  margin: 0;
+}
+
+.stats strong {
+  font-size: 1.2rem;
+  font-weight: bold;
+}

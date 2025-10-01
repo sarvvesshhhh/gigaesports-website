@@ -1,0 +1,81 @@
+.card {
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: white;
+  /* Added transitions for a smooth hover effect */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem; /* Added padding */
+  border-bottom: 1px solid #2a2a2a; /* Added a separator line */
+  color: #a0a0a0;
+  font-size: 0.9rem;
+}
+
+.status {
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.live {
+  background-color: #e13737;
+  color: white;
+}
+
+.upcoming {
+  background-color: #444;
+}
+
+.teams {
+  display: flex;
+  justify-content: space-around; /* Changed for better spacing */
+  align-items: center;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Increased gap for more breathing room */
+  align-items: center;
+  flex: 1; /* Allows the team sections to grow equally */
+}
+
+.teamLogo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.team span {
+  font-size: 1rem;
+  font-weight: 500; /* Made team names slightly bolder */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+}
+
+.team strong {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.vs {
+  color: #a0a0a0;
+  font-weight: bold;
+  font-size: 0.9rem; /* Slightly smaller VS text */
+}

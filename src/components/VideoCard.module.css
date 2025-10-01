@@ -1,0 +1,67 @@
+.card {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.thumbnail {
+  position: relative;
+  width: 100%;
+  height: 160px; /* Aspect ratio 16:9 approx */
+}
+
+.tag {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+}
+
+.highlight {
+  background-color: #e13737;
+}
+
+.stream {
+  background-color: #3777e1;
+}
+
+.info {
+  padding: 1rem;
+}
+
+.creator {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  margin: 0 0 0.5rem 0;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+}
+
+.stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}

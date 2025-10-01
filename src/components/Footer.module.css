@@ -1,0 +1,158 @@
+.footer {
+  background-color: #121212;
+  color: #a0a0a0;
+  padding: 4rem 2rem 2rem 2rem;
+  border-top: 1px solid #2a2a2a;
+}
+
+.footerTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 3rem auto;
+}
+
+.infoSection {
+  flex: 2;
+  min-width: 250px;
+}
+
+/* V-- ADD THIS NEW STYLE --V */
+.infoSection img { /* This targets the Image component's underlying <img> tag */
+  width: 80px;  /* Set a fixed square width */
+  height: 80px; /* Set a fixed square height */
+  object-fit: contain; /* Ensures the logo scales without cropping */
+  margin-bottom: 1rem; /* Add some space below the logo */
+}
+
+.infoSection p {
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.socialIcons a {
+  color: #a0a0a0;
+  transition: color 0.2s ease-in-out;
+}
+
+.socialIcons a:hover {
+  color: white;
+}
+
+.linksSection {
+  display: flex;
+  gap: 4rem;
+  flex: 2;
+  min-width: 300px;
+}
+
+.linkColumn h3 {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.linkColumn ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linkColumn li {
+  margin-bottom: 1rem;
+}
+
+.linkColumn a {
+  color: #a0a0a0;
+  text-decoration: none;
+}
+
+.linkColumn a:hover {
+  color: white;
+}
+
+.subscribeSection {
+  flex: 3;
+  min-width: 300px;
+}
+
+.subscribeSection h3 {
+  color: white;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.subscribeForm {
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.subscribeForm input {
+  flex-grow: 1;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px 0 0 8px;
+  color: white;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border-right: none;
+}
+
+.subscribeForm button {
+  background-color: #e13737;
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid #2a2a2a;
+  font-size: 0.9rem;
+}
+
+.legalLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.legalLinks a {
+  color: #a0a0a0;
+  text-decoration: none;
+}
+
+.legalLinks a:hover {
+  color: white;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.logoText {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: white;
+}
