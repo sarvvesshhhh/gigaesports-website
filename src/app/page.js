@@ -1,6 +1,7 @@
 import Hero from '../components/Hero';
 import LiveMatches from '../components/LiveMatches';
-import CreatorHighlights from '../components/CreatorHighlights'; // <-- 1. Import
+import CreatorHighlights from '../components/CreatorHighlights';
+import LiveStreams from '../components/LiveStreams'; // <-- 1. Import
 
 async function getMatchData() {
   // This is the PandaScore URL for running and upcoming matches
@@ -34,7 +35,8 @@ export default async function Home() {
     <main>
       <Hero />
       <LiveMatches matches={matches} />
-      <CreatorHighlights /> {/* <-- 2. Add the new component */}
+      <CreatorHighlights />
+      <LiveStreams /> {/* <-- 2. Add the new component */}
     </main>
   );
 }

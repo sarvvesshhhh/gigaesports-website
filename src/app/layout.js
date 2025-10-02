@@ -1,19 +1,19 @@
 import './globals.css';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer'; // <-- 1. IMPORT THE FOOTER
+import Footer from '../components/Footer';
+import Provider from './Provider'; // <-- 1. IMPORT
 
-export const metadata = {
-  title: 'GigaEsports',
-  description: 'The Ultimate Esports Experience',
-};
+// ... (metadata) ...
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
-        <Footer /> {/* <-- 2. ADD THE FOOTER COMPONENT HERE */}
+        <Provider> {/* <-- 2. WRAP WITH PROVIDER */}
+          <Navbar />
+          {children}
+          <Footer />
+        </Provider>
       </body>
     </html>
   );

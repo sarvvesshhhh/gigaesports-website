@@ -1,13 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // V-- ADD THIS 'images' CONFIGURATION --V
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'cdn.pandascore.co',
-        port: '',
         pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+        pathname: '/vi/**',
+      },
+      // V-- ADD THIS NEW OBJECT FOR GOOGLE --V
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
       },
     ],
   },

@@ -1,25 +1,39 @@
 import styles from './CreatorHighlights.module.css';
 import VideoCard from './VideoCard';
+import Link from 'next/link'; // Import the Link component
 
-// Placeholder data - we can replace this with real data later
-const dummyVideos = [
-  { id: 1, creator: 'Mortal', title: 'INSANE 1v4 Clutch - BGMI Pro League', views: '3.2M', likes: '280K', thumbnail: '/images/placeholder-thumb1.jpg', tag: 'HIGHLIGHT' },
-  { id: 2, creator: 'TenZ', title: 'INSANE ACE on Bind - Valorant Champions...', views: '2.1M', likes: '145K', thumbnail: '/images/placeholder-thumb2.jpg', tag: 'HIGHLIGHT' },
-  { id: 3, creator: 'Scout', title: 'BGMI Ranked Push - Road to Conqueror', views: '1.2M', likes: '89K', thumbnail: '/images/placeholder-thumb3.jpg', tag: 'STREAM' },
-  { id: 4, creator: 'Faker', title: 'Perfect Game - Azir Montage vs Gen.G', views: '278K', likes: '12.5K', thumbnail: '/images/placeholder-thumb4.jpg', tag: 'HIGHLIGHT' },
-];
+// This function will run on the server to fetch highlight videos
+async function getYouTubeHighlights() {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  const query = encodeURIComponent('bgmi highlights'); // A search query for popular highlights
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&order=viewCount&q=${query}&maxResults=4&key=${apiKey}`;
 
+  try {
+    const response = await fetch(url, { next: { revalidate: 3600 } }); // Re-fetch every hour
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.items;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 
-const CreatorHighlights = () => {
+const CreatorHighlights = async () => {
+  const videos = await getYouTubeHighlights();
+
   return (
     <section className={styles.highlightsSection}>
       <div className={styles.header}>
         <h2>Creator Highlights</h2>
-        <button>View All Updates</button>
+        <Link href="/highlights">
+          <button>View All Updates</button>
+        </Link>
       </div>
       <div className={styles.videoGrid}>
-        {dummyVideos.map(video => (
-          <VideoCard key={video.id} video={video} />
+        {videos.map(video => (
+          // We'll pass the whole video object to the card
+          <VideoCard key={video.id.videoId} video={video} />
         ))}
       </div>
     </section>
