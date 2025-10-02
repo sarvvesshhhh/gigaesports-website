@@ -1,34 +1,40 @@
-import LiveMatches from '../../components/LiveMatches';
+'use client'; // <-- Make this a client component
 
-async function getScheduleData() {
-  // Using the PandaScore URL and fetching more items for the page
-  const url = `https://api.pandascore.co/matches/upcoming?filter[status]=running,not_started&sort=begin_at&per_page=20&token=${process.env.PANDASCORE_API_KEY}`;
+import Link from 'next/link';
+import LiveMatchesClient from '../../components/LiveMatchesClient';
+import styles from './SchedulesPage.module.css';
+import { useSearchParams } from 'next/navigation';
 
-  try {
-    const response = await fetch(url, {
-      next: { revalidate: 60 } // Re-fetch data every 60 seconds
-    });
+const gameFilters = [
+  { id: 'all', name: 'All Games' },
+  { id: 'cs-go', name: 'Counter-Strike' },
+  { id: 'valorant', name: 'Valorant' },
+  { id: 'dota-2', name: 'Dota 2' },
+  { id: 'lol', name: 'League of Legends' },
+];
 
-    if (!response.ok) {
-      const errorDetails = await response.text();
-      console.error("PandaScore API Error:", errorDetails);
-      throw new Error('Failed to fetch data from PandaScore API');
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch schedule data');
-  }
-}
-
-export default async function SchedulesPage() {
-  const matches = await getScheduleData();
+export default function SchedulesPage() {
+  const searchParams = useSearchParams();
+  const selectedGame = searchParams.get('game') || 'all';
 
   return (
-    // We can wrap our component for some vertical spacing
-    <div style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
-      <LiveMatches matches={matches} />
+    <div className={styles.page}>
+      <h1 className={styles.title}>Matches & Schedules</h1>
+
+      <nav className={styles.gameNav}>
+        {gameFilters.map(filter => (
+          <Link
+            key={filter.id}
+            href={`/schedules?game=${filter.id}`}
+            className={`${styles.gameLink} ${filter.id === selectedGame ? styles.activeGame : ''}`}
+          >
+            {filter.name}
+          </Link>
+        ))}
+      </nav>
+
+      {/* We no longer pass initialData. This component will fetch everything. */}
+      <LiveMatchesClient selectedGame={selectedGame} />
     </div>
   );
 }

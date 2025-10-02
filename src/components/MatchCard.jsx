@@ -1,20 +1,30 @@
 import styles from './MatchCard.module.css';
+import { FaRegClock } from 'react-icons/fa';
+import Link from 'next/link';
 
 const MatchCard = ({ match }) => {
-  // This code is now structured to work with PandaScore's data
-  const team1 = match.opponents[0]?.opponent || { name: 'TBD' };
-  const team2 = match.opponents[1]?.opponent || { name: 'TBD' };
-  const score1 = match.results[0]?.score || 0;
-  const score2 = match.results[1]?.score || 0;
+  // Added extra ?. to safely access nested properties
+  const team1 = match.opponents?.[0]?.opponent || { name: 'TBD', image_url: '/images/default-team-logo.png' };
+  const team2 = match.opponents?.[1]?.opponent || { name: 'TBD', image_url: '/images/default-team-logo.png' };
+  const score1 = match.results?.[0]?.score || 0;
+  const score2 = match.results?.[1]?.score || 0;
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+    return date.toLocaleString('en-US', options);
+  };
   
   return (
-    <div className={styles.card}>
+    <Link href={`/matches/${match.id}`} className={styles.card}>
       <div className={styles.header}>
         <span className={`${styles.status} ${match.status === 'running' ? styles.live : styles.upcoming}`}>
           {match.status === 'not_started' ? 'UPCOMING' : match.status.toUpperCase()}
         </span>
-        <span className={styles.game}>{match.videogame.name}</span>
+        <span className={styles.game}>{match.videogame?.name || 'Game'}</span>
       </div>
+
       <div className={styles.teams}>
         <div className={styles.team}>
           <img src={team1.image_url || '/images/default-team-logo.png'} alt={team1.name} className={styles.teamLogo} />
@@ -28,7 +38,14 @@ const MatchCard = ({ match }) => {
           <strong>{score2}</strong>
         </div>
       </div>
-    </div>
+
+      {match.status === 'not_started' && match.begin_at && (
+        <div className={styles.footer}>
+          <FaRegClock />
+          <span>{formatDateTime(match.begin_at)}</span>
+        </div>
+      )}
+    </Link>
   );
 };
 

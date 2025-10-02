@@ -1,0 +1,76 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  color: white;
+}
+
+.error {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h2 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.header p {
+  font-size: 1rem;
+  color: #a0a0a0;
+  margin-top: 0.5rem;
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 200px;
+}
+
+/* ... (keep existing styles) ... */
+
+.teamName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center; /* Added for better alignment */
+}
+
+/* V-- ADD THIS NEW STYLE --V */
+.seriesScore {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+
+.score {
+  font-size: 4rem;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #e13737;
+  margin-top: 0.5rem;
+}

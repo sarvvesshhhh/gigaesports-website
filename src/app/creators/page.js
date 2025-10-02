@@ -8,7 +8,18 @@ const categories = [
   { id: 'bgmi', name: 'BGMI', query: '#bgmi live' },
   { id: 'valo', name: 'Valorant', query: '#valorant live' },
   { id: 'codm', name: 'CODM', query: '#codm live' },
-  { id: 'gtarp', name: 'GTA RP', query: '#gtarp' },
+  { 
+    id: 'gtarp', 
+    name: 'GTA RP', 
+    query: '#gtarp live',
+    subCategories: [
+      { id: 'all', name: 'All Servers', query: '#gtarp live' },
+      { id: 'soulcity', name: 'Soulcity RP', query: 'Soulcity RP live' },
+      { id: 'nopixel', name: 'NoPixel India', query: '"NoPixel India" live' },
+      { id: 'prodigy', name: 'Prodigy RP', query: '"Prodigy India" live' },
+      { id: 'samatva', name: 'Samatva RP', query: '"Samatva RP" live' },
+    ]
+  },
   { id: 'cs2', name: 'Counter-Strike 2', query: '#cs2 live' },
 ];
 
@@ -35,17 +46,24 @@ async function getLiveStreams(searchQuery) {
 
 // --- The Page Component ---
 export default async function CreatorsPage({ searchParams }) {
-  // Get the active category from the URL, or default to 'all'
-  const activeCategory = categories.find(c => c.id === searchParams.game) || categories[0];
+  const activeGameId = searchParams.game || 'all';
+  const activeServerId = searchParams.server || 'all';
+
+  const activeCategory = categories.find(c => c.id === activeGameId) || categories[0];
+  let searchQuery = activeCategory.query;
+
+  let activeSubCategory = null;
+  if (activeCategory.id === 'gtarp' && activeCategory.subCategories) {
+    activeSubCategory = activeCategory.subCategories.find(sc => sc.id === activeServerId) || activeCategory.subCategories[0];
+    searchQuery = activeSubCategory.query;
+  }
   
-  // Fetch the streams for that category
-  const streams = await getLiveStreams(activeCategory.query);
+  const streams = await getLiveStreams(searchQuery);
 
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Live Creators</h1>
 
-      {/* Category Navigation */}
       <nav className={styles.categoryNav}>
         {categories.map(category => (
           <Link
@@ -58,7 +76,20 @@ export default async function CreatorsPage({ searchParams }) {
         ))}
       </nav>
 
-      {/* Grid of Live Streams */}
+      {activeCategory.id === 'gtarp' && activeCategory.subCategories && (
+        <nav className={styles.subCategoryNav}>
+          {activeCategory.subCategories.map(subCategory => (
+            <Link
+              key={subCategory.id}
+              href={`/creators?game=gtarp&server=${subCategory.id}`}
+              className={`${styles.categoryLink} ${subCategory.id === activeSubCategory?.id ? styles.activeCategory : ''}`}
+            >
+              {subCategory.name}
+            </Link>
+          ))}
+        </nav>
+      )}
+
       <div className={styles.streamsGrid}>
         {streams && streams.map(stream => (
           <a key={stream.id.videoId} href={`https://www.youtube.com/watch?v=${stream.id.videoId}`} target="_blank" rel="noopener noreferrer" className={styles.card}>

@@ -2,15 +2,16 @@
 import styles from './Navbar.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation'; // 1. Import the usePathname hook
 import { useSession, signIn, signOut } from "next-auth/react";
 import { IoSearch, IoNotificationsOutline } from 'react-icons/io5';
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const pathname = usePathname(); // 2. Get the current page's path
 
   return (
     <nav className={styles.navbar}>
-      {/* --- LOGO --- */}
       <Link href="/" className={styles.logoContainer}>
         <Image 
           src="/images/logo.png"
@@ -21,17 +22,16 @@ const Navbar = () => {
         <span className={styles.logoText}>GigaEsports</span>
       </Link>
 
-      {/* --- NAVIGATION LINKS (This is the missing part) --- */}
       <ul className={styles.links}>
-        <li><Link href="/">Home</Link></li>
-        <li><Link href="/schedules">Schedules</Link></li>
-        <li><Link href="/tournaments">Tournaments</Link></li>
-        <li><Link href="/bgmi">BGMI</Link></li>
-        <li><Link href="/creators">Creators</Link></li>
-        <li><Link href="/highlights">Highlights</Link></li>
+        {/* 3. We check each link to see if it's active */}
+        <li><Link href="/" className={pathname === '/' ? styles.activeLink : ''}>Home</Link></li>
+        <li><Link href="/schedules" className={pathname === '/schedules' ? styles.activeLink : ''}>Schedules</Link></li>
+        <li><Link href="/tournaments" className={pathname === '/tournaments' ? styles.activeLink : ''}>Tournaments</Link></li>
+        <li><Link href="/bgmi" className={pathname === '/bgmi' ? styles.activeLink : ''}>BGMI</Link></li>
+        <li><Link href="/creators" className={pathname === '/creators' ? styles.activeLink : ''}>Creators</Link></li>
+        <li><Link href="/highlights" className={pathname === '/highlights' ? styles.activeLink : ''}>Highlights</Link></li>
       </ul>
 
-      {/* --- RIGHT SECTION --- */}
       <div className={styles.rightSection}>
         <div className={styles.searchBar}>
           <IoSearch className={styles.searchIcon} />
