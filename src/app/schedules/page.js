@@ -1,40 +1,11 @@
-'use client'; // <-- Make this a client component
-
-import Link from 'next/link';
-import LiveMatchesClient from '../../components/LiveMatchesClient';
-import styles from './SchedulesPage.module.css';
-import { useSearchParams } from 'next/navigation';
-
-const gameFilters = [
-  { id: 'all', name: 'All Games' },
-  { id: 'cs-go', name: 'Counter-Strike' },
-  { id: 'valorant', name: 'Valorant' },
-  { id: 'dota-2', name: 'Dota 2' },
-  { id: 'lol', name: 'League of Legends' },
-];
+import { Suspense } from 'react';
+import SchedulesClientPage from './SchedulesClientPage';
+import Loading from './loading'; // Import your loading component
 
 export default function SchedulesPage() {
-  const searchParams = useSearchParams();
-  const selectedGame = searchParams.get('game') || 'all';
-
   return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>Matches & Schedules</h1>
-
-      <nav className={styles.gameNav}>
-        {gameFilters.map(filter => (
-          <Link
-            key={filter.id}
-            href={`/schedules?game=${filter.id}`}
-            className={`${styles.gameLink} ${filter.id === selectedGame ? styles.activeGame : ''}`}
-          >
-            {filter.name}
-          </Link>
-        ))}
-      </nav>
-
-      {/* We no longer pass initialData. This component will fetch everything. */}
-      <LiveMatchesClient selectedGame={selectedGame} />
-    </div>
+    <Suspense fallback={<Loading />}>
+      <SchedulesClientPage />
+    </Suspense>
   );
 }
