@@ -42,7 +42,9 @@
   margin-bottom: 3rem;
 }
 
+/* Find your .primaryButton and .secondaryButton styles and replace them with this */
 .primaryButton, .secondaryButton {
+  display: inline-block; /* Added to make Link tags behave like buttons */
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   font-weight: 500;
@@ -50,6 +52,8 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  text-align: center; /* Added for proper text alignment */
+  text-decoration: none; /* Added to remove underline from Link */
 }
 
 .primaryButton {
