@@ -1,64 +1,58 @@
 import { NextResponse } from 'next/server';
 
-const GRID_GQL_ENDPOINT = 'https://api.grid.gg/central-data/graphql';
-
-async function getTeamMatchHistory(teamId, gameId) {
-  const gridTeamUrn = `urn:grid:team:${teamId}`;
-  const gridTitleUrn = `urn:grid:title:${gameId}`;
-
-  const gqlQuery = {
-    query: `
-      query GetSeriesForTeam($filters: SeriesFilter!) {
-        allSeries(filter: $filters, first: 50, orderBy: startTimeScheduled, orderDirection: desc) {
-          edges {
-            node {
-              id
-              winner {
-                id
-              }
-              participants {
-                team {
-                  id
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-    variables: { 
-      filters: { 
-        teamIds: { in: [gridTeamUrn] },
-        titleIds: { in: [gridTitleUrn] }
-      } 
-    }
-  };
-  
-  const response = await fetch(GRID_GQL_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.GRID_API_KEY },
-    body: JSON.stringify(gqlQuery)
-  });
-
+async function getTeamMatchHistory(teamId) {
+  // Fetches a team's finished matches across all games
+  const url = `https://api.pandascore.co/teams/${teamId}/matches?filter[status]=finished&sort=-end_at&per_page=50&token=${process.env.PANDASCORE_API_KEY}`;
+  const response = await fetch(url);
   if (!response.ok) return [];
-  const data = await response.json();
-  return data?.data?.allSeries?.edges?.map(edge => edge.node) || [];
+  return await response.json();
 }
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const team1Id = searchParams.get('team1_id');
   const team2Id = searchParams.get('team2_id');
-  const gameId = searchParams.get('game_id');
 
-  if (!team1Id || !team2Id || !gameId) {
-    return NextResponse.json({ error: 'All IDs are required' }, { status: 400 });
+  if (!team1Id || !team2Id) {
+    return NextResponse.json({ error: 'Two team IDs are required' }, { status: 400 });
   }
 
+  // Fetch match history for both teams at the same time
   const [team1Matches, team2Matches] = await Promise.all([
-    getTeamMatchHistory(team1Id, gameId),
-    getTeamMatchHistory(team2Id, gameId),
+    getTeamMatchHistory(team1Id),
+    getTeamMatchHistory(team2Id),
   ]);
+
+  // Calculate total wins from the fetched matches
+  const team1Wins = team1Matches.filter(m => m.winner_id === parseInt(team1Id)).length;
+  const team2Wins = team2Matches.filter(m => m.winner_id === parseInt(team2Id)).length;
   
-  // ... (The rest of the calculation logic is the same)
+  let h2hWinsTeam1 = 0;
+  let h2hWinsTeam2 = 0;
+
+  // Find head-to-head matches from team1's history and calculate wins
+  team1Matches.forEach(match => {
+    const isH2H = match.opponents.some(op => op.opponent.id === parseInt(team2Id));
+    if (isH2H) {
+      if (match.winner_id === parseInt(team1Id)) h2hWinsTeam1++;
+      if (match.winner_id === parseInt(team2Id)) h2hWinsTeam2++;
+    }
+  });
+
+  const stats = {
+    team1: {
+      recentWinRate: ((team1Wins / (team1Matches.length || 1)) * 100).toFixed(0),
+      totalWins: team1Wins,
+      totalMatches: team1Matches.length,
+      h2hWins: h2hWinsTeam1,
+    },
+    team2: {
+      recentWinRate: ((team2Wins / (team2Matches.length || 1)) * 100).toFixed(0),
+      totalWins: team2Wins,
+      totalMatches: team2Matches.length,
+      h2hWins: h2hWinsTeam2,
+    }
+  };
+
+  return NextResponse.json(stats);
 }
