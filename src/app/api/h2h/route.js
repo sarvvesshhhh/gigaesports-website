@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
 async function getTeamMatchHistory(teamId) {
-  // Fetches a team's finished matches across all games
   const url = `https://api.pandascore.co/teams/${teamId}/matches?filter[status]=finished&sort=-end_at&per_page=50&token=${process.env.PANDASCORE_API_KEY}`;
   const response = await fetch(url);
   if (!response.ok) return [];
@@ -17,20 +16,17 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Two team IDs are required' }, { status: 400 });
   }
 
-  // Fetch match history for both teams at the same time
   const [team1Matches, team2Matches] = await Promise.all([
     getTeamMatchHistory(team1Id),
     getTeamMatchHistory(team2Id),
   ]);
 
-  // Calculate total wins from the fetched matches
   const team1Wins = team1Matches.filter(m => m.winner_id === parseInt(team1Id)).length;
   const team2Wins = team2Matches.filter(m => m.winner_id === parseInt(team2Id)).length;
   
   let h2hWinsTeam1 = 0;
   let h2hWinsTeam2 = 0;
 
-  // Find head-to-head matches from team1's history and calculate wins
   team1Matches.forEach(match => {
     const isH2H = match.opponents.some(op => op.opponent.id === parseInt(team2Id));
     if (isH2H) {
@@ -54,5 +50,5 @@ export async function GET(request) {
     }
   };
 
-  return NextResponse.json(stats); 
+  return NextResponse.json(stats);
 }
