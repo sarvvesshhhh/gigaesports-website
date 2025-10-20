@@ -54,5 +54,5 @@ export async function GET(request) {
     }
   };
 
-  return NextResponse.json(stats);
+  return NextResponse.json(stats); 
 }
