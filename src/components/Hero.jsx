@@ -1,18 +1,18 @@
 import styles from './Hero.module.css';
-import Link from 'next/link'; // 1. Import the Link component
+import Link from 'next/link';
 
-const Hero = () => {
+const Hero = ({ featuredMatch }) => {
+  // Use the featured match data, or fall back to defaults
+  const title = featuredMatch?.league?.name || 'The Ultimate Esports Experience';
+  const subtitle = featuredMatch?.name || 'Live schedules, real-time scores, and more.';
+  const backgroundImageUrl = featuredMatch?.league?.image_url || '/images/hero-background.jpg';
+
   return (
-    <section className={styles.hero}>
+    // The style now dynamically sets the background image
+    <section className={styles.hero} style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${backgroundImageUrl})`}}>
       <div className={styles.heroContent}>
-        <h1 className={styles.title}>
-          The Ultimate <span>Esports</span> Experience
-        </h1>
-        <p className={styles.subtitle}>
-          Stay connected with live schedules, real-time scores, creator highlights, and instant notifications from the world of competitive gaming.
-        </p>
-        
-        {/* V-- UPDATED BUTTONS SECTION --V */}
+        <h1 className={styles.title}>{title}</h1>
+        <p className={styles.subtitle}>{subtitle}</p>
         <div className={styles.buttons}>
           <Link href="/schedules?status=live" className={styles.primaryButton}>
             Watch Live
@@ -20,11 +20,6 @@ const Hero = () => {
           <Link href="/schedules" className={styles.secondaryButton}>
             View Schedule
           </Link>
-        </div>
-
-        <div className={styles.stats}>
-          <p><strong>2.4M</strong> Active Viewers</p>
-          <p><strong>16</strong> Live Matches</p>
         </div>
       </div>
     </section>

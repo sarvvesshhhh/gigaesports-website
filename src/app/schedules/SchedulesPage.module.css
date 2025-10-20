@@ -57,3 +57,19 @@
     opacity: .5;
   }
 }
+
+/* ... (at the bottom of the file) ... */
+.viewPastLink {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.viewPastLink a {
+  color: #a0a0a0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.viewPastLink a:hover {
+  color: white;
+}

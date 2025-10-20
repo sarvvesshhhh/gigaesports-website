@@ -1,0 +1,63 @@
+.selectorBar {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: -2rem 2rem 3rem 2rem; /* Negative margin to pull it up over the hero */
+  position: relative;
+  z-index: 10;
+  border: 1px solid #2a2a2a;
+}
+
+.title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #a0a0a0;
+  margin: 0 0 1rem 0.5rem;
+  font-weight: 500;
+}
+
+.gameList {
+  display: flex;
+  overflow-x: auto; /* Allows horizontal scrolling on small screens */
+  gap: 1rem;
+  padding-bottom: 0.5rem; /* For the scrollbar */
+}
+
+/* Hide scrollbar for a cleaner look */
+.gameList::-webkit-scrollbar {
+  display: none;
+}
+.gameList {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.gameItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: #a0a0a0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  width: 80px;
+  text-align: center;
+  transition: color 0.2s ease-in-out;
+}
+
+.gameItem:hover {
+  color: white;
+}
+
+.gameIcon {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  filter: grayscale(100%);
+  transition: filter 0.2s ease-in-out;
+}
+
+.gameItem:hover .gameIcon {
+  filter: grayscale(0%);
+}

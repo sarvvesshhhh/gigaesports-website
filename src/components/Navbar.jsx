@@ -2,13 +2,13 @@
 import styles from './Navbar.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // 1. Import the usePathname hook
+import { usePathname } from 'next/navigation';
 import { useSession, signIn, signOut } from "next-auth/react";
 import { IoSearch, IoNotificationsOutline } from 'react-icons/io5';
 
 const Navbar = () => {
   const { data: session } = useSession();
-  const pathname = usePathname(); // 2. Get the current page's path
+  const pathname = usePathname();
 
   return (
     <nav className={styles.navbar}>
@@ -23,10 +23,10 @@ const Navbar = () => {
       </Link>
 
       <ul className={styles.links}>
-        {/* 3. We check each link to see if it's active */}
         <li><Link href="/" className={pathname === '/' ? styles.activeLink : ''}>Home</Link></li>
         <li><Link href="/schedules" className={pathname === '/schedules' ? styles.activeLink : ''}>Schedules</Link></li>
         <li><Link href="/tournaments" className={pathname === '/tournaments' ? styles.activeLink : ''}>Tournaments</Link></li>
+        <li><Link href="/news" className={pathname === '/news' ? styles.activeLink : ''}>News</Link></li> {/* <-- NEWS LINK ADDED */}
         <li><Link href="/bgmi" className={pathname === '/bgmi' ? styles.activeLink : ''}>BGMI</Link></li>
         <li><Link href="/creators" className={pathname === '/creators' ? styles.activeLink : ''}>Creators</Link></li>
         <li><Link href="/highlights" className={pathname === '/highlights' ? styles.activeLink : ''}>Highlights</Link></li>

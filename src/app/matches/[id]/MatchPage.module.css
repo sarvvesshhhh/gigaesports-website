@@ -8,6 +8,8 @@
 .error {
   text-align: center;
   font-size: 1.2rem;
+  color: #a0a0a0;
+  margin-top: 4rem;
 }
 
 .header {
@@ -44,21 +46,11 @@
   width: 200px;
 }
 
-/* ... (keep existing styles) ... */
-
 .teamName {
   font-size: 1.5rem;
   font-weight: 600;
-  text-align: center; /* Added for better alignment */
+  text-align: center;
 }
-
-/* V-- ADD THIS NEW STYLE --V */
-.seriesScore {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-top: 1rem;
-}
-
 
 .score {
   font-size: 4rem;
@@ -66,6 +58,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  white-space: nowrap;
 }
 
 .status {
@@ -73,4 +66,25 @@
   font-weight: 500;
   color: #e13737;
   margin-top: 0.5rem;
+}
+
+.tally {
+  display: flex;
+  gap: 4px;
+  margin-top: 1rem;
+  height: 4px;
+}
+
+.tallyMark {
+  width: 20px;
+  height: 100%;
+  background-color: #444; /* Muted default color */
+  border-radius: 2px;
+}
+
+.tallyMarkWinner {
+  width: 20px;
+  height: 100%;
+  background-color: #ffd700; /* Bright yellow for the winner */
+  border-radius: 2px;
 }

@@ -1,15 +1,21 @@
+import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import Provider from './Provider'; // <-- 1. IMPORT
+import Provider from './Provider';
 
-// ... (metadata) ...
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata = {
+  title: 'GigaEsports',
+  description: 'The Ultimate Esports Experience',
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Provider> {/* <-- 2. WRAP WITH PROVIDER */}
+      <body className={inter.className}>
+        <Provider>
           <Navbar />
           {children}
           <Footer />

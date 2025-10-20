@@ -1,3 +1,5 @@
+'use client';
+
 import styles from './MatchCard.module.css';
 import { FaRegClock } from 'react-icons/fa';
 import Link from 'next/link';
