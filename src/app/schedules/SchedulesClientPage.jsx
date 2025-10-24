@@ -20,6 +20,9 @@ export default function SchedulesClientPage() {
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Matches & Schedules</h1>
+      <div className={styles.viewPastLink}>
+        <Link href="/matches/past">View Recent Results →</Link>
+      </div>
       <nav className={styles.gameNav}>
         {gameFilters.map(filter => (
           <Link

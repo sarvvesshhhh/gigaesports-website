@@ -7,8 +7,9 @@ export default function Loading() {
     <div className={styles.page}>
       <h1 className={styles.title}>Matches & Schedules</h1>
       <div className={styles.grid}>
-        <SkeletonCard /><SkeletonCard /><SkeletonCard /><SkeletonCard />
-        <SkeletonCard /><SkeletonCard /><SkeletonCard /><SkeletonCard />
+        {/* Adjust the number of skeleton cards if needed */}
+        <SkeletonCard /><SkeletonCard /><SkeletonCard />
+        <SkeletonCard /><SkeletonCard /><SkeletonCard />
       </div>
     </div>
   );
