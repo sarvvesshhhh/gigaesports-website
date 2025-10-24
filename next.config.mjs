@@ -1,3 +1,9 @@
+// Add this check at the very top
+if (!process.env.NEXTAUTH_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error("Build failed: NEXTAUTH_SECRET environment variable is missing!");
+}
+
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
