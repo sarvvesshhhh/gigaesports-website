@@ -4,12 +4,13 @@ import GoogleProvider from "next-auth/providers/google"
 export const authOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "", // Fallback to empty string if missing
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      // Fallback to dummy strings so build doesn't fail
+      clientId: process.env.GOOGLE_CLIENT_ID || "build-placeholder",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "build-placeholder",
     }),
   ],
-  // Use a fallback secret during build if the env var is missing
-  secret: process.env.NEXTAUTH_SECRET || "temporary-secret-for-build", 
+  // CRITICAL FIX: Provide a fallback secret
+  secret: process.env.NEXTAUTH_SECRET || "build-placeholder-secret",
 }
 
 const handler = NextAuth(authOptions);

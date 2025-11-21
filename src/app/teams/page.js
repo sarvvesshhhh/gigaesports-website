@@ -2,9 +2,9 @@ import TeamCard from '../../components/TeamCard';
 import styles from './TeamsPage.module.css';
 
 async function getTeamsData() {
-  // If the API key is missing during build, return empty array instead of crashing
+  // 1. Check if API key exists. If not, skip fetch to prevent build error.
   if (!process.env.PANDASCORE_API_KEY) {
-    console.warn("Build Warning: PANDASCORE_API_KEY is missing");
+    console.log("Building without API key - returning empty list");
     return [];
   }
 
@@ -12,16 +12,18 @@ async function getTeamsData() {
 
   try {
     const response = await fetch(url, { next: { revalidate: 86400 } });
-    // If the API fails (e.g. 401 Unauthorized), return empty array instead of throwing
+    
+    // 2. If API fails, log it but DO NOT throw an error. Return empty list instead.
     if (!response.ok) {
-      console.error("Build Warning: API request failed", await response.text());
-      return [];
+        console.error("PandaScore API failed:", response.status);
+        return []; 
     }
+    
     const data = await response.json();
     return data || [];
   } catch (error) {
-    console.error("Build Warning:", error);
-    return [];
+    console.error("Fetch error:", error);
+    return []; // 3. Always return an empty array on failure
   }
 }
 
@@ -36,7 +38,6 @@ export default async function TeamsPage() {
           <TeamCard key={team.id} team={team} />
         ))}
       </div>
-      {teams.length === 0 && <p style={{textAlign: 'center', color: '#666'}}>No teams loaded (Check API Key)</p>}
     </div>
   );
 }
