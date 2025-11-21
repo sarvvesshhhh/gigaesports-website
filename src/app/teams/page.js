@@ -2,28 +2,25 @@ import TeamCard from '../../components/TeamCard';
 import styles from './TeamsPage.module.css';
 
 async function getTeamsData() {
-  // 1. Check if API key exists. If not, skip fetch to prevent build error.
-  if (!process.env.PANDASCORE_API_KEY) {
-    console.log("Building without API key - returning empty list");
-    return [];
-  }
+  // Safety Check: If no key, stop immediately.
+  if (!process.env.PANDASCORE_API_KEY) return [];
 
   const url = `https://api.pandascore.co/teams?sort=name&per_page=50&token=${process.env.PANDASCORE_API_KEY}`;
 
   try {
     const response = await fetch(url, { next: { revalidate: 86400 } });
     
-    // 2. If API fails, log it but DO NOT throw an error. Return empty list instead.
+    // CRITICAL: We removed the 'throw error' line.
     if (!response.ok) {
-        console.error("PandaScore API failed:", response.status);
-        return []; 
+        console.error("PandaScore API error:", response.status);
+        return []; // Return empty array instead of crashing
     }
     
     const data = await response.json();
     return data || [];
   } catch (error) {
     console.error("Fetch error:", error);
-    return []; // 3. Always return an empty array on failure
+    return []; // Return empty array instead of crashing
   }
 }
 
