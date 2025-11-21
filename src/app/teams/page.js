@@ -1,63 +1,42 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import TeamCard from '../../components/TeamCard';
 import styles from './TeamsPage.module.css';
 
-export default function TeamsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
+async function getTeamsData() {
+  // If the API key is missing during build, return empty array instead of crashing
+  if (!process.env.PANDASCORE_API_KEY) {
+    console.warn("Build Warning: PANDASCORE_API_KEY is missing");
+    return [];
+  }
 
-  // This hook runs whenever the user stops typing.
-  useEffect(() => {
-    // Don't search on initial load or if the term is too short.
-    if (initialLoad || searchTerm.length < 2) {
-      setResults([]);
-      setInitialLoad(false);
-      return;
+  const url = `https://api.pandascore.co/teams?sort=name&per_page=50&token=${process.env.PANDASCORE_API_KEY}`;
+
+  try {
+    const response = await fetch(url, { next: { revalidate: 86400 } });
+    // If the API fails (e.g. 401 Unauthorized), return empty array instead of throwing
+    if (!response.ok) {
+      console.error("Build Warning: API request failed", await response.text());
+      return [];
     }
+    const data = await response.json();
+    return data || [];
+  } catch (error) {
+    console.error("Build Warning:", error);
+    return [];
+  }
+}
 
-    const delayDebounceFn = setTimeout(() => {
-      const searchTeams = async () => {
-        setIsLoading(true);
-        const response = await fetch(`/api/teams/search?q=${searchTerm}`);
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setResults(data);
-        }
-        setIsLoading(false);
-      };
-      searchTeams();
-    }, 500); // Wait 500ms after user stops typing.
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, initialLoad]);
+export default async function TeamsPage() {
+  const teams = await getTeamsData();
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Search Esports Teams</h1>
-
-      <div className={styles.searchContainer}>
-        <input
-          type="search"
-          placeholder="Start typing a team name (e.g., FaZe, Sentinels...)"
-          className={styles.searchInput}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      {isLoading && <p className={styles.loadingText}>Searching...</p>}
-      
+      <h1 className={styles.title}>Esports Teams</h1>
       <div className={styles.grid}>
-        {!isLoading && results.length === 0 && searchTerm.length > 1 && (
-          <p className={styles.noResultsText}>No teams found for "{searchTerm}"</p>
-        )}
-        {results.map(team => (
+        {Array.isArray(teams) && teams.map(team => (
           <TeamCard key={team.id} team={team} />
         ))}
       </div>
+      {teams.length === 0 && <p style={{textAlign: 'center', color: '#666'}}>No teams loaded (Check API Key)</p>}
     </div>
   );
 }
