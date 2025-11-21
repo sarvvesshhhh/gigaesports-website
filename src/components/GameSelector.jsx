@@ -4,13 +4,16 @@ import Link from 'next/link';
 
 // This map connects the game's "slug" from the API to your local image file.
 const gameIconMap = {
-  'lol': '/images/lol-icon.png',
+  'league-of-legends': '/images/lol-icon.png',
   'cs-go': '/images/csgo-icon.png',
   'valorant': '/images/valorant-icon.png',
   'dota-2': '/images/dota2-icon.png',
   'ow': '/images/overwatch-icon.png',
-  'rl-esports': '/images/rocketleague-icon.png',
-  // Add more games and their corresponding image paths here
+  'rl': '/images/rocketleague-icon.png',
+  'fifa': '/images/fifa-icon.png',
+  'pubg': '/images/pubg-icon.png',
+  'cod-mw': '/images/cod-icon.png',
+  
 };
 
 async function getGames() {

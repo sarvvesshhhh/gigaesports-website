@@ -2,50 +2,64 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #121212;
   padding: 1rem 2rem;
-  color: white;
-  border-bottom: 1px solid #2a2a2a;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  /* Use the new glass effect */
+  background: rgba(9, 9, 11, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--surface-border);
 }
 
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 0.75rem; /* 12px space */
+  gap: 0.75rem;
   text-decoration: none;
-  color: white;
+  color: var(--text-main);
 }
 
 .logoText {
-  font-size: 1.5rem; /* 24px */
-  font-weight: bold;
-  white-space: nowrap; /* Prevents text from wrapping */
+  font-size: 1.5rem;
+  font-weight: 800; /* Bolder for impact */
+  letter-spacing: -0.05em; /* Tighter tracking */
 }
 
 .links {
   display: flex;
   list-style: none;
-  margin: 0;
-  padding: 0;
   gap: 2rem;
 }
 
 .links a {
-  color: #a0a0a0;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.2s ease-in-out;
-  padding: 0.5rem 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .links a:hover {
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .activeLink {
-  color: #ffffff !important; /* Use !important to override other link styles */
-  font-weight: 500;
-  border-bottom: 2px solid #e13737;
+  color: var(--text-main) !important;
+  position: relative;
+}
+
+/* A small glowing dot for the active link instead of a line */
+.activeLink::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--primary);
 }
 
 .rightSection {
@@ -63,42 +77,35 @@
 .searchIcon {
   position: absolute;
   left: 1rem;
-  color: #a0a0a0;
+  color: var(--text-muted);
 }
 
 .searchBar input {
-  background-color: #2a2a2a;
-  border: 1px solid #444;
+  background-color: var(--surface);
+  border: 1px solid var(--surface-border);
   border-radius: 8px;
-  color: white;
+  color: var(--text-main);
   padding: 0.6rem 1rem 0.6rem 2.5rem;
   width: 250px;
   font-size: 0.9rem;
+  transition: border-color 0.2s;
 }
 
-.searchBar input::placeholder {
-  color: #a0a0a0;
-}
-
-.userIcons {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  color: #a0a0a0;
-}
-
-.userIcons *:hover {
-  color: #ffffff;
-  cursor: pointer;
+.searchBar input:focus {
+  border-color: var(--primary);
 }
 
 .authButton {
-  background-color: #e13737;
+  background-color: var(--primary);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
-  white-space: nowrap;
+  font-weight: 600;
+  transition: filter 0.2s;
+}
+
+.authButton:hover {
+  filter: brightness(1.1);
 }
