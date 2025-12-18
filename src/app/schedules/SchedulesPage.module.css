@@ -1,75 +1,103 @@
-.page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-  color: white;
+.pageContainer {
+  min-height: 100vh;
+  padding-bottom: 4rem;
 }
 
-.title {
+/* HEADER */
+.header {
+  padding: 4rem 2rem 2rem 2rem;
+  background: linear-gradient(to bottom, #121214, var(--bg-app));
+  border-bottom: 1px solid var(--border-subtle);
   text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-}
-
-.gameNav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
   margin-bottom: 3rem;
 }
 
-.gameLink {
-  background-color: #2a2a2a;
-  color: #a0a0a0;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
 }
 
-.gameLink:hover {
-  background-color: #444;
-  color: white;
+.pageSubtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
 }
 
-.activeGame {
-  background-color: #e13737;
-  color: white;
+/* TIMELINE LAYOUT */
+.timelineLayout {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-/* ... (keep your existing styles) ... */
-
-.skeletonCard {
-  background-color: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 12px;
-  height: 250px;
-  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.daySection {
+  margin-bottom: 3rem;
+  position: relative;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .5;
-  }
+/* The Date Header ("Tuesday, Dec 19") */
+.dateHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: sticky; /* Keeps date visible while scrolling */
+  top: 90px;
+  z-index: 10;
+  padding: 0.5rem 0;
+  background: var(--bg-app); /* Hide content behind sticky header */
 }
 
-/* ... (at the bottom of the file) ... */
-.viewPastLink {
+.dateBadge {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--accent);
+  font-weight: 700;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.line {
+  height: 1px;
+  background: var(--border-subtle);
+  flex-grow: 1;
+}
+
+/* Grid for the matches */
+.matchesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding-left: 1rem; /* Indent slightly for timeline feel */
+  border-left: 2px solid var(--border-subtle); /* Vertical timeline line */
+  margin-left: 1.5rem; /* Align with the date badge */
+}
+
+.emptyState {
   text-align: center;
-  margin-bottom: 2rem;
+  padding: 4rem;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 12px;
 }
 
-.viewPastLink a {
-  color: #a0a0a0;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.viewPastLink a:hover {
-  color: white;
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .matchesGrid {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+    grid-template-columns: 1fr;
+  }
+  
+  .dateHeader {
+    top: 70px;
+  }
 }

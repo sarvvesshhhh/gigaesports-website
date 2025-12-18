@@ -1,38 +1,101 @@
-.page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-  color: white;
+.pageContainer {
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  padding-bottom: 4rem;
 }
 
-.title {
+/* HEADER */
+.header {
+  padding: 5rem 2rem 3rem 2rem;
+  background: linear-gradient(to bottom, #121214, var(--bg-app));
+  border-bottom: 1px solid var(--border-subtle);
   text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
 
+.pageTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.pageSubtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* SEARCH BAR (Visual Only) */
 .searchContainer {
-  margin-bottom: 3rem;
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
 }
 
 .searchInput {
   width: 100%;
-  background-color: #2a2a2a;
-  border: 1px solid #444;
+  padding: 1rem 1rem 1rem 3rem;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  color: white;
-  padding: 1rem 1.5rem;
-  font-size: 1.2rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  cursor: not-allowed; /* Since it's disabled */
 }
 
-.loadingText, .noResultsText {
-  text-align: center;
-  color: #a0a0a0;
-  font-size: 1.1rem;
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255, 70, 85, 0.2);
 }
 
-.grid {
+/* GRID LAYOUT */
+.gridContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* Auto-fill grid: creates as many columns as fit */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
   gap: 1.5rem;
+}
+
+.cardWrapper {
+  /* This ensures the TeamCard fills the grid cell height */
+  height: 100%;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
+  
+  .gridContainer {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Smaller cards on mobile */
+    gap: 1rem;
+    padding: 0 1rem;
+  }
 }
