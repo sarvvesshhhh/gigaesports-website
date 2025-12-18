@@ -1,0 +1,12 @@
+[
+  {
+    "id": "bgis-2025-official",
+    "name": "BATTLEGROUNDS MOBILE INDIA SERIES 2025",
+    "begin_at": "2025-02-20T10:00:00Z",
+    "league": { "name": "KRAFTON OFFICIAL" },
+    "prizepool": "₹2,00,00,000",
+    "status": "UPCOMING",
+    "is_official": true,
+    "image": "https://esports-battlegroundsmobileindia.com/static/media/banner.png" 
+  }
+]
