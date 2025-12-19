@@ -1,26 +1,24 @@
-import { Inter } from 'next/font/google';
+import { ClerkProvider } from '@clerk/nextjs';
+import { dark } from '@clerk/themes'; // Dark theme for the login modal
 import './globals.css';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar'; // Correct path to your component
 import Footer from '../components/Footer';
-import Provider from './Provider';
-
-const inter = Inter({ subsets: ['latin'] });
-
-export const metadata = {
-  title: 'GigaEsports',
-  description: 'The Ultimate Esports Experience',
-};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Provider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables: { colorPrimary: '#ff4655' }
+      }}
+    >
+      <html lang="en">
+        <body>
           <Navbar />
           {children}
           <Footer />
-        </Provider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

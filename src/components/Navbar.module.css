@@ -1,111 +1,112 @@
 .navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 1rem 2rem;
+  background-color: #09090b;
+  border-bottom: 1px solid #27272a;
   position: sticky;
   top: 0;
   z-index: 100;
-  /* Use the new glass effect */
-  background: rgba(9, 9, 11, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--surface-border);
+  /* Fix the font issue globally for the navbar */
+  font-family: system-ui, -apple-system, sans-serif; 
 }
 
-.logoContainer {
+/* LOGO STYLES */
+.brandWrapper {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.8rem;
   text-decoration: none;
-  color: var(--text-main);
 }
 
-.logoText {
-  font-size: 1.5rem;
-  font-weight: 800; /* Bolder for impact */
-  letter-spacing: -0.05em; /* Tighter tracking */
-}
-
-.links {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-}
-
-.links a {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.links a:hover {
-  color: var(--text-main);
-}
-
-.activeLink {
-  color: var(--text-main) !important;
-  position: relative;
-}
-
-/* A small glowing dot for the active link instead of a line */
-.activeLink::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background-color: var(--primary);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--primary);
-}
-
-.rightSection {
+.logoImage {
   display: flex;
   align-items: center;
+}
+
+.brandName {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: white;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.navLinks {
+  display: flex;
   gap: 1.5rem;
 }
 
-.searchBar {
-  position: relative;
+.link {
+  color: #a1a1aa;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.link:hover {
+  color: #ff4655; /* Hover Red */
+}
+
+/* AUTH SECTION */
+.authSection {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
-.searchIcon {
-  position: absolute;
-  left: 1rem;
-  color: var(--text-muted);
+.userControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #18181b;
+  padding: 0.3rem 0.5rem 0.3rem 1rem;
+  border-radius: 50px;
+  border: 1px solid #27272a;
 }
 
-.searchBar input {
-  background-color: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  color: var(--text-main);
-  padding: 0.6rem 1rem 0.6rem 2.5rem;
-  width: 250px;
-  font-size: 0.9rem;
-  transition: border-color 0.2s;
+.profileLink {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+  padding-right: 0.5rem;
+  border-right: 1px solid #333;
+  margin-right: 0.2rem;
 }
 
-.searchBar input:focus {
-  border-color: var(--primary);
-}
-
-.authButton {
-  background-color: var(--primary);
+.username {
   color: white;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: filter 0.2s;
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
-.authButton:hover {
-  filter: brightness(1.1);
+.levelBadge {
+  color: #ff4655;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.loginBtn {
+  background-color: #ff4655;
+  color: white;
+  text-decoration: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+  text-transform: uppercase;
+}
+
+.loginBtn:hover {
+  background-color: #e11d2b;
 }

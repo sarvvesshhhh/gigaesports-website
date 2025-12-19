@@ -1,76 +1,139 @@
-import Link from 'next/link';
-import Image from 'next/image'; // We will use this directly in the page
-import styles from './HighlightsPage.module.css';
-import VideoCard from '../../components/VideoCard'; // Reuse our VideoCard component
+'use client';
 
-// --- Highlight Categories Configuration ---
-const categories = [
-  { id: 'all', name: 'All Highlights', query: 'esports highlights' },
-  { id: 'cs2', name: 'Counter-Strike 2', query: 'CS2 highlights' },
-  { id: 'dota2', name: 'Dota 2', query: 'Dota 2 highlights' },
-  { id: 'valo', name: 'Valorant', query: 'Valorant highlights' },
-  { id: 'lol', name: 'League of Legends', query: 'League of Legends highlights' },
-  { id: 'bgmi', name: 'BGMI', query: 'BGMI highlights' },
-];
+import { useState, useEffect, useRef } from 'react';
+import { fetchShorts } from '../../lib/youtubeShorts';
+import styles from './Highlights.module.css';
+import Image from 'next/image';
 
-// --- Data Fetching Function ---
-async function getYouTubeHighlights(searchQuery) {
-  const apiKey = process.env.YOUTUBE_API_KEY;
-  const query = encodeURIComponent(searchQuery);
-  // Fetch up to 20 popular highlight videos
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&order=viewCount&q=${query}&maxResults=20&key=${apiKey}`;
+const CATEGORIES = ["All Games", "BGMI", "Valorant", "CS2", "GTA RP", "Minecraft"];
 
-  try {
-    const response = await fetch(url, { next: { revalidate: 3600 } }); // Re-fetch every hour
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("YouTube API Error:", error.error.message);
-      return [];
-    }
-    const data = await response.json();
-    return data.items;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-
-// --- The Page Component ---
-export default async function HighlightsPage({ searchParams }) {
-  // Get the active category from the URL, or default to 'all'
-  const activeCategory = categories.find(c => c.id === searchParams.game) || categories[0];
+export default function HighlightsPage() {
+  const [activeCategory, setActiveCategory] = useState("All Games");
+  const [shorts, setShorts] = useState([]);
+  const [loading, setLoading] = useState(true);
   
-  // Fetch the highlights for that category
-  const videos = await getYouTubeHighlights(activeCategory.query);
+  // Player State
+  const [selectedIndex, setSelectedIndex] = useState(null); // Null = Grid View, Number = Player View
+  const scrollContainerRef = useRef(null);
+
+  // 1. Fetch Data on Category Change
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      const data = await fetchShorts(activeCategory);
+      setShorts(data);
+      setLoading(false);
+    }
+    loadData();
+  }, [activeCategory]);
+
+  // 2. Scroll to selected video when Player opens
+  useEffect(() => {
+    if (selectedIndex !== null && scrollContainerRef.current) {
+      const videoElement = scrollContainerRef.current.children[selectedIndex];
+      if (videoElement) {
+        videoElement.scrollIntoView({ behavior: 'auto' });
+      }
+    }
+  }, [selectedIndex]);
+
+  // 3. Close Player
+  const closePlayer = () => setSelectedIndex(null);
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>Esports Highlights</h1>
+    <div className={styles.pageContainer}>
+      
+      {/* HEADER (Only visible in Grid View) */}
+      <header className={`${styles.header} ${selectedIndex !== null ? styles.hidden : ''}`}>
+        <h1 className={styles.pageTitle}>GIGA SHORTS</h1>
+        <div className={styles.filterBar}>
+          {CATEGORIES.map(cat => (
+            <button 
+              key={cat} 
+              className={`${styles.filterBtn} ${activeCategory === cat ? styles.activeBtn : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </header>
 
-      {/* Category Navigation */}
-      <nav className={styles.categoryNav}>
-        {categories.map(category => (
-          <Link
-            key={category.id}
-            href={`/highlights?game=${category.id}`}
-            className={`${styles.categoryLink} ${category.id === activeCategory.id ? styles.activeCategory : ''}`}
-          >
-            {category.name}
-          </Link>
-        ))}
-      </nav>
-
-      {/* Grid of Highlight Videos */}
-      <div className={styles.videoGrid}>
-        {videos && videos.length > 0 ? (
-          videos.map(video => (
-            // Re-using the VideoCard component
-            <VideoCard key={video.id.videoId} video={video} />
-          ))
+      {/* GRID VIEW */}
+      <div className={`${styles.gridContainer} ${selectedIndex !== null ? styles.hidden : ''}`}>
+        {loading ? (
+           <div className={styles.loading}>Loading Viral Clips...</div>
         ) : (
-          <p>No highlights found for this category.</p>
+          shorts.map((clip, index) => (
+            <div 
+              key={clip.id.videoId + index} 
+              className={styles.shortCard}
+              onClick={() => setSelectedIndex(index)} // OPEN PLAYER
+            >
+              <div className={styles.thumbnailWrapper}>
+                <Image 
+                  src={clip.snippet.thumbnails.high.url} 
+                  alt={clip.snippet.title} 
+                  fill
+                  className={styles.thumbnail}
+                  unoptimized
+                />
+                <div className={styles.playIcon}>▶</div>
+              </div>
+              <div className={styles.cardInfo}>
+                 <h3 className={styles.cardTitle}>{clip.snippet.title}</h3>
+                 <p className={styles.cardAuthor}>@{clip.snippet.channelTitle}</p>
+              </div>
+            </div>
+          ))
         )}
       </div>
+
+      {/* FULL SCREEN SHORTS PLAYER (The "TikTok" UI) */}
+      {selectedIndex !== null && (
+        <div className={styles.playerOverlay}>
+          
+          <button className={styles.closeBtn} onClick={closePlayer}>✕ Close</button>
+          
+          <div className={styles.scrollSnapContainer} ref={scrollContainerRef}>
+            {shorts.map((clip, index) => (
+              <div key={clip.id.videoId + index} className={styles.videoSlide}>
+                
+                {/* OPTIMIZATION: Only render iframe if it's the active, previous, or next video */}
+                {Math.abs(selectedIndex - index) <= 1 ? (
+                  <iframe 
+                    src={`https://www.youtube.com/embed/${clip.id.videoId}?autoplay=${selectedIndex === index ? 1 : 0}&rel=0&modestbranding=1&controls=1&loop=1`} 
+                    title={clip.snippet.title}
+                    className={styles.iframe}
+                    allow="autoplay; encrypted-media; fullscreen"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                   /* Placeholder for off-screen videos to save memory */
+                   <div className={styles.placeholder}>
+                      <Image 
+                        src={clip.snippet.thumbnails.high.url} 
+                        fill 
+                        alt="Loading" 
+                        className={styles.thumbnail}
+                        unoptimized
+                      />
+                      <div className={styles.loadingSpinner}>Loading...</div>
+                   </div>
+                )}
+
+                {/* Video Info Overlay */}
+                <div className={styles.videoOverlay}>
+                  <h2 className={styles.overlayTitle}>{clip.snippet.title}</h2>
+                  <p className={styles.overlayAuthor}>@{clip.snippet.channelTitle}</p>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
