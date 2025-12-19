@@ -1,113 +1,62 @@
-import MatchCard from '../components/MatchCard';
-import styles from './page.module.css';
+import HomeClient from './HomeClient';
+import { supabase } from '../lib/supabase';
 
-// --- DATA FETCHING FUNCTIONS ---
+async function getData() {
+  const apiKey = process.env.PANDASCORE_API_KEY;
+  const headers = { 
+    'Authorization': `Bearer ${apiKey}`,
+    'Accept': 'application/json'
+  };
 
-async function getPastMatches() {
-  if (!process.env.PANDASCORE_API_KEY) return [];
-  const url = `https://api.pandascore.co/matches/past?sort=-begin_at&per_page=5&token=${process.env.PANDASCORE_API_KEY}`;
-  
   try {
-    const response = await fetch(url, { next: { revalidate: 3600 } });
-    if (!response.ok) return [];
-    return await response.json();
+    const [liveRes, upcomingRes, pastRes] = await Promise.all([
+      fetch('https://api.pandascore.co/matches/running?sort=begin_at&per_page=5', { headers, next: { revalidate: 30 } }),
+      fetch('https://api.pandascore.co/matches/upcoming?sort=begin_at&per_page=5', { headers, next: { revalidate: 60 } }),
+      fetch('https://api.pandascore.co/matches/past?sort=-begin_at&per_page=5', { headers, next: { revalidate: 60 } })
+    ]);
+
+    const liveMatches = liveRes.ok ? await liveRes.json() : [];
+    const upcomingMatches = upcomingRes.ok ? await upcomingRes.json() : [];
+    const pastMatches = pastRes.ok ? await pastRes.json() : [];
+
+    // INTELLIGENT HERO SELECTION
+    // Priority: 1. Live Match -> 2. Next Big Upcoming -> 3. Recent Result
+    let heroMatch = null;
+    let heroType = 'upcoming'; // 'live', 'upcoming', 'result'
+
+    if (liveMatches.length > 0) {
+      heroMatch = liveMatches[0];
+      heroType = 'live';
+    } else if (upcomingMatches.length > 0) {
+      heroMatch = upcomingMatches[0];
+      heroType = 'upcoming';
+    } else {
+      heroMatch = pastMatches[0];
+      heroType = 'result';
+    }
+
+    // Fetch Leaderboard
+    const { data: topUsers } = await supabase
+      .from('profiles')
+      .select('id, username, xp')
+      .order('xp', { ascending: false })
+      .limit(5);
+
+    return { 
+      heroMatch, 
+      heroType, 
+      liveTicker: liveMatches, // Pass all live matches for the ticker
+      upcomingList: upcomingMatches.slice(1, 4), // Exclude hero if it's upcoming
+      topUsers 
+    };
+
   } catch (error) {
-    console.error("Failed to fetch past matches:", error);
-    return [];
+    console.error("Home Data Error:", error);
+    return { heroMatch: null, heroType: 'error', liveTicker: [], upcomingList: [], topUsers: [] };
   }
 }
 
-async function getUpcomingMatches() {
-  if (!process.env.PANDASCORE_API_KEY) return [];
-  const url = `https://api.pandascore.co/matches/upcoming?sort=begin_at&per_page=5&token=${process.env.PANDASCORE_API_KEY}`;
-  
-  try {
-    const response = await fetch(url, { next: { revalidate: 3600 } });
-    if (!response.ok) return [];
-    return await response.json();
-  } catch (error) {
-    console.error("Failed to fetch upcoming matches:", error);
-    return [];
-  }
-}
-
-// --- MAIN UI COMPONENT ---
-
-export default async function Home() {
-  // Fetch data in parallel
-  const [pastMatches, upcomingMatches] = await Promise.all([
-    getPastMatches(),
-    getUpcomingMatches()
-  ]);
-
-  // Use the first upcoming match as the "Featured" match, or null if none exist
-  const featuredMatch = upcomingMatches.length > 0 ? upcomingMatches[0] : null;
-
-  return (
-    <div className={styles.container}>
-      
-      {/* 1. HERO SECTION */}
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            WELCOME TO <span className={styles.brand}>GIGAESPORTS</span>
-          </h1>
-          <p className={styles.heroSubtitle}>
-            Live Scores. Past Results. The Home of Competitive Gaming.
-          </p>
-          <div className={styles.statsRow}>
-            <div className={styles.stat}>
-              <span className={styles.statVal}>{upcomingMatches.length}</span>
-              <span className={styles.statLabel}>Live Matches</span>
-            </div>
-            <div className={styles.stat}>
-              <span className={styles.statVal}>24/7</span>
-              <span className={styles.statLabel}>Coverage</span>
-            </div>
-          </div>
-        </div>
-        
-        {/* Background Glow Effect */}
-        <div className={styles.heroGlow}></div>
-      </section>
-
-      {/* 2. MATCH DASHBOARD */}
-      <div className={styles.dashboardGrid}>
-        
-        {/* Left Column: Upcoming Matches */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Upcoming Action</h2>
-            <div className={styles.liveIndicator}>LIVE</div>
-          </div>
-          <div className={styles.cardList}>
-            {upcomingMatches.length > 0 ? (
-              upcomingMatches.slice(0, 3).map(match => (
-                <MatchCard key={match.id} match={match} />
-              ))
-            ) : (
-              <p style={{color: '#666'}}>No upcoming matches scheduled.</p>
-            )}
-          </div>
-        </section>
-
-        {/* Right Column: Recent Results */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Recent Results</h2>
-          </div>
-          <div className={styles.cardList}>
-            {pastMatches.length > 0 ? (
-              pastMatches.slice(0, 5).map(match => (
-                <MatchCard key={match.id} match={match} />
-              ))
-            ) : (
-              <p style={{color: '#666'}}>No recent matches found.</p>
-            )}
-          </div>
-        </section>
-
-      </div>
-    </div>
-  );
+export default async function HomePage() {
+  const data = await getData();
+  return <HomeClient {...data} />;
 }

@@ -1,0 +1,189 @@
+/* --- CORE --- */
+.wrapper {
+  min-height: 100vh;
+  background-color: #030304;
+  color: white;
+  padding-bottom: 2rem;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* New Particle Canvas z-index behind everything */
+.particlesCanvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+.ambientMesh {
+  position: fixed; top: -40%; right: -30%; width: 150vw; height: 150vh;
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent-glow) 8%, transparent) 0%, transparent 60%);
+  filter: blur(150px); z-index: 0; pointer-events: none;
+}
+
+/* --- TICKER (Updated Colors) --- */
+.tickerContainer {
+  background: rgba(10, 10, 12, 0.8); border-bottom: 1px solid rgba(255,255,255,0.05);
+  height: 42px; overflow: hidden; display: flex; align-items: center; backdrop-filter: blur(10px); position: relative; z-index: 10;
+}
+.tickerWrap { width: 100%; overflow: hidden; white-space: nowrap; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+.tickerMove { display: inline-block; animation: ticker 45s linear infinite; }
+.tickerItem {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0 2rem;
+  font-family: monospace; font-size: 0.8rem; color: #8F9099; text-decoration: none; transition: color 0.2s;
+}
+.tickerItem:hover { color: white; }
+.dot { color: var(--accent-glow); animation: pulse 1.5s infinite; }
+.tCode { color: white; font-weight: 700; }
+.tScore { color: var(--accent-glow); font-weight: 800; /* Changed to Theme Red */ }
+
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* --- MAIN GRID --- */
+.mainGrid {
+  max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem;
+  display: grid; grid-template-columns: 1fr 380px; gap: 2.5rem; min-height: 75vh; position: relative; z-index: 5;
+}
+
+/* --- 3D HERO --- */
+.heroSectionPerspective { perspective: 1500px; display: flex; align-items: center; justify-content: center; }
+
+.heroCard3D {
+  position: relative; width: 100%; height: 100%; min-height: 550px;
+  background: rgba(14, 14, 16, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px;
+  transform-style: preserve-3d; overflow: hidden;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6);
+  backdrop-filter: blur(20px);
+}
+
+.heroGlow {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% -20%, color-mix(in srgb, var(--accent-glow) 25%, transparent) 0%, transparent 70%);
+  z-index: 0; pointer-events: none; mix-blend-mode: screen;
+}
+
+.holographicSheen {
+  position: absolute; inset: -100%;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.05) 55%, transparent 70%);
+  z-index: 3; pointer-events: none; mix-blend-mode: overlay; transition: opacity 0.3s;
+}
+
+.heroContent {
+  position: relative; z-index: 5; width: 100%; height: 100%; padding: 3.5rem;
+  display: flex; flex-direction: column; justify-content: space-between;
+  /* Removed static translateZ, handled by motion div now */
+}
+
+/* Header & Status - Updated Colors */
+.heroHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+.statusBadge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 100px; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; }
+.live { background: rgba(255, 70, 85, 0.1); color: #ff4655; border: 1px solid rgba(255, 70, 85, 0.3); box-shadow: 0 0 20px rgba(255, 70, 85, 0.2); }
+.upcoming { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+.result { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.15); }
+.leagueTag { display: flex; align-items: center; gap: 0.6rem; color: #aaa; font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
+
+/* VS Display with Parallax */
+.vsDisplay { display: flex; align-items: center; justify-content: space-between; margin: 3rem 0; }
+.teamSide { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; flex: 1; }
+
+/* Logos float deeper */
+.logoHuge {
+  width: 150px; height: 150px; position: relative; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.02); border-radius: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
+  transform-style: preserve-3d;
+}
+.logoText { font-size: 4rem; font-weight: 900; color: #fff; opacity: 0.8; }
+
+.teamNameHero { font-size: 2rem; font-weight: 900; text-transform: uppercase; text-align: center; line-height: 1; max-width: 220px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.centerStage { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+.scoreHero { font-size: 6.5rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 0 0 60px rgba(255,255,255,0.15); }
+.divider { color: #444; margin: 0 1rem; }
+.vsText { font-size: 5rem; font-weight: 900; color: #222; font-style: italic; -webkit-text-stroke: 1px rgba(255,255,255,0.1); }
+.mapInfo { color: var(--accent-glow); font-weight: 800; letter-spacing: 0.1em; font-size: 0.95rem; text-transform: uppercase; }
+.startTime { color: #3b82f6; font-weight: 700; font-size: 1.2rem; }
+
+/* Hero Button */
+.heroFooter { display: flex; justify-content: center; margin-top: auto; }
+.predictionBtn { position: relative; text-decoration: none; cursor: pointer; perspective: 1000px; }
+.btnContent {
+  position: relative; z-index: 2; display: flex; align-items: center; gap: 0.8rem;
+  background: white; color: black; padding: 1.1rem 3.5rem; border-radius: 14px;
+  font-weight: 800; font-size: 1.1rem; transition: transform 0.2s, background 0.2s;
+}
+.predictionBtn:hover .btnContent { transform: translateY(-3px) translateZ(10px); background: #fff; }
+.btnGlow {
+  position: absolute; inset: 0; background: var(--accent-glow);
+  filter: blur(25px); opacity: 0.6; z-index: 1; transform: translateY(8px) scale(0.95); transition: opacity 0.3s, transform 0.3s;
+}
+.predictionBtn:hover .btnGlow { opacity: 0.9; transform: translateY(10px) scale(1); }
+
+/* --- SIDE PANEL (Updated Ranks & Borders) --- */
+.sidePanel { display: flex; flex-direction: column; gap: 2rem; }
+
+/* Subtle Glowing Border Animation on Hover */
+.panelCard {
+  position: relative; background: rgba(14, 14, 16, 0.6); border-radius: 24px; padding: 1.8rem; backdrop-filter: blur(20px);
+  background-clip: padding-box; border: 1px solid transparent;
+}
+.glowBorder::before {
+  content: ''; position: absolute; inset: 0; border-radius: 24px; padding: 1px;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+}
+.glowBorder:hover::before {
+  background: linear-gradient(to bottom right, var(--accent-glow), transparent);
+}
+
+.panelHeader { display: flex; align-items: center; gap: 0.8rem; color: #8F9099; font-weight: 700; font-size: 0.85rem; margin-bottom: 1.5rem; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; }
+
+/* Updated Ranks - THEME RED */
+.rankList { display: flex; flex-direction: column; gap: 0.6rem; }
+.rankRow { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; background: rgba(255,255,255,0.02); border-radius: 12px; transition: all 0.2s; border: 1px solid transparent; }
+.rankRow:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); transform: translateX(5px); }
+
+/* Rank 1 is Special */
+.rankOne { background: linear-gradient(to right, color-mix(in srgb, var(--accent-glow) 15%, transparent), transparent); border: 1px solid color-mix(in srgb, var(--accent-glow) 30%, transparent); }
+.rankOne .rankIdx { color: var(--accent-glow) !important; text-shadow: 0 0 10px var(--accent-glow); }
+.rankOne .rankAvatar { box-shadow: 0 0 0 2px var(--accent-glow); color: white; }
+
+.rankIdx { font-family: monospace; font-size: 1.2rem; font-weight: 800; width: 25px; text-align: center; color: #555; }
+/* Default Top 3 Colors (Red shades) */
+.rankRow:nth-child(2) .rankIdx { color: #ff7a7a; }
+.rankRow:nth-child(3) .rankIdx { color: #c45e5e; }
+
+.rankUser { flex: 1; display: flex; align-items: center; gap: 1rem; font-weight: 700; font-size: 0.95rem; }
+.rankAvatar { width: 32px; height: 32px; background: #1a1a1c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #888; font-weight: 800; }
+.rankXp { color: #8F9099; font-size: 0.85rem; font-family: monospace; font-weight: 700; }
+
+.cardFooter { margin-top: 1rem; text-align: center; color: #444; font-size: 0.8rem; font-weight: 700; }
+
+/* Upcoming List */
+.upcomingList { display: flex; flex-direction: column; gap: 0.6rem; }
+.miniMatch {
+  display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.2rem;
+  border-radius: 14px; background: rgba(255,255,255,0.02); text-decoration: none; color: white; transition: all 0.2s; border: 1px solid transparent;
+}
+.miniMatch:hover { background: rgba(255,255,255,0.04); border-color: rgba(59, 130, 246, 0.3); transform: translateX(5px); }
+.miniTime { font-size: 0.8rem; color: #666; font-family: monospace; }
+.miniTeams { font-weight: 700; font-size: 0.95rem; color: #ddd; display: flex; gap: 0.6rem; }
+.miniTeamName { color: white; }
+.miniVs { color: #333; font-size: 0.8rem; align-self: center; }
+
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+@media (max-width: 1024px) {
+  .mainGrid { grid-template-columns: 1fr; }
+  .sidePanel { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .heroCard3D { min-height: 450px; }
+}
+@media (max-width: 768px) {
+  .heroContent { padding: 2rem; }
+  .vsDisplay { flex-direction: column; gap: 2rem; margin: 2rem 0; }
+  .logoHuge { width: 100px; height: 100px; }
+  .logoText { font-size: 3rem; }
+  .scoreHero { font-size: 5rem; }
+  .sidePanel { display: flex; }
+  .heroCard3D { min-height: auto; }
+}
