@@ -1,31 +1,118 @@
-.page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 2rem;
-  color: white;
+.wrapper {
+  min-height: 100vh;
+  background: #050505;
+  color: #ffffff;
+  padding: 120px 5% 60px;
 }
 
-.profileCard {
-  background-color: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 12px;
-  padding: 2rem;
+.grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 3D IDENTITY CARD */
+.playerCard3D {
+  background: linear-gradient(145deg, #111111, #080808);
+  border: 1px solid #222;
+  border-radius: 20px;
+  padding: 40px 30px;
   text-align: center;
-  max-width: 400px;
-  width: 100%;
+  position: sticky;
+  top: 120px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.profileImage {
+.avatarRing {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 25px;
+  position: relative;
   border-radius: 50%;
-  margin: 1rem 0;
+  padding: 4px;
+  background: linear-gradient(45deg, #ff0055, #00f2ff);
 }
 
-.profileCard h1 {
-  margin-top: 0;
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #000;
 }
 
-.profileCard p {
-  color: #a0a0a0;
+.levelBadge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #ff0055;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 14px;
+  border: 2px solid #000;
+}
+
+.username {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 5px;
+}
+
+.rankTag {
+  color: #00f2ff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+/* XP SYSTEM */
+.xpBarBackground {
+  height: 6px;
+  background: #222;
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.xpBarFill {
+  height: 100%;
+  background: #ff0055;
+  box-shadow: 0 0 10px #ff0055;
+}
+
+/* SOCIAL HUB */
+.socialCard {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 20px;
+  padding: 35px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.friendRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background: #111;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  transition: 0.2s;
+}
+
+.friendRow:hover {
+  background: #161616;
+  border-color: #333;
 }

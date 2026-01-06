@@ -1,0 +1,118 @@
+.wrapper {
+  min-height: 100vh;
+  background-color: #030304;
+  color: white;
+  padding-bottom: 4rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.particlesCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.ambientGlow { position: fixed; top: 0; left: 0; width: 100vw; height: 60vh; z-index: 0; pointer-events: none; filter: blur(100px); }
+
+/* 3D HERO */
+.heroSection {
+  perspective: 1500px;
+  padding: 4rem 2rem 2rem 2rem;
+  display: flex; justify-content: center;
+}
+
+.heroCard {
+  position: relative; width: 100%; max-width: 1200px; height: 450px;
+  background: #0E0E10; border-radius: 28px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  transform-style: preserve-3d;
+  display: flex; align-items: flex-end;
+}
+
+.heroBg {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+  filter: blur(40px) brightness(0.5) saturate(1.2); transform: scale(1.2); z-index: 0;
+}
+.heroOverlay {
+  position: absolute; inset: 0; background: linear-gradient(to top, #030304 0%, rgba(3,3,4,0.4) 100%); z-index: 1;
+}
+
+.heroContent {
+  position: relative; z-index: 5; padding: 3rem; width: 100%;
+  display: flex; align-items: flex-end; gap: 2rem;
+  transform: translateZ(30px);
+}
+
+.logoWrapper {
+  width: 140px; height: 140px; background: rgba(255,255,255,0.05); border-radius: 30px;
+  display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.heroText { display: flex; flex-direction: column; gap: 0.4rem; padding-bottom: 0.5rem; }
+.badges { display: flex; gap: 0.6rem; margin-bottom: 0.5rem; }
+.gameBadge { color: white; padding: 0.3rem 0.8rem; border-radius: 6px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.tierBadge { background: rgba(255,255,255,0.1); padding: 0.3rem 0.8rem; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
+
+.title { font-size: 3.5rem; font-weight: 900; line-height: 1; text-transform: uppercase; text-shadow: 0 0 30px rgba(0,0,0,0.5); }
+.season { font-size: 1.4rem; color: #ccc; font-weight: 500; margin-bottom: 1rem; }
+
+.metaRow { display: flex; gap: 2rem; font-size: 0.9rem; font-weight: 600; color: #aaa; }
+.metaItem { display: flex; align-items: center; gap: 0.5rem; }
+
+/* CONTENT */
+.contentContainer { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; position: relative; z-index: 5; }
+
+.tabs { display: flex; gap: 1rem; margin-bottom: 2rem; }
+.tab {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+  padding: 1rem 2rem; border-radius: 12px; color: #888; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.2s;
+}
+.activeTab { background: white; color: black; border-color: white; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+
+/* LISTS */
+.matchList { display: flex; flex-direction: column; gap: 1rem; }
+.matchRow {
+  display: grid; grid-template-columns: 80px 1fr 100px; align-items: center;
+  background: rgba(255,255,255,0.02); padding: 1.2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);
+  text-decoration: none; color: white; transition: all 0.2s;
+}
+.matchRow:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); border-color: rgba(255,255,255,0.1); }
+
+.mDate { border-right: 1px solid rgba(255,255,255,0.1); padding-right: 1.5rem; display: flex; flex-direction: column; align-items: center; }
+.mDay { font-size: 1.4rem; font-weight: 700; }
+.mMonth { font-size: 0.8rem; color: #666; text-transform: uppercase; }
+
+.mTeams { display: flex; justify-content: center; gap: 2rem; align-items: center; }
+.mTeam { display: flex; align-items: center; gap: 0.8rem; width: 220px; font-weight: 700; }
+.mTeam:first-child { justify-content: flex-end; text-align: right; }
+.mTLogo { width: 30px; height: 30px; object-fit: contain; }
+
+.mScore { background: rgba(0,0,0,0.3); padding: 0.4rem 1rem; border-radius: 8px; font-weight: 800; min-width: 80px; text-align: center; }
+.vs { color: #555; font-size: 0.8rem; }
+.finalScore { letter-spacing: 2px; }
+
+.mStatus { text-align: right; font-weight: 700; font-size: 0.85rem; }
+.liveTag { color: #ff4655; display: flex; align-items: center; gap: 0.3rem; justify-content: flex-end; }
+.upTag { color: #3b82f6; }
+.finTag { color: #666; }
+
+.teamGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+.teamCard {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 2rem;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.tLogoBox { width: 80px; height: 80px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; }
+.tLogoBox img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.tName { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.2rem; }
+.tAcronym { color: #666; font-size: 0.9rem; font-weight: 700; }
+
+.emptyState { padding: 4rem; text-align: center; color: #555; background: rgba(255,255,255,0.02); border-radius: 16px; font-style: italic; }
+
+@media (max-width: 768px) {
+  .heroSection { height: auto; padding: 2rem 1rem; }
+  .heroCard { height: auto; }
+  .heroContent { flex-direction: column; align-items: center; text-align: center; padding: 2rem; }
+  .matchRow { grid-template-columns: 1fr; gap: 1rem; text-align: center; }
+  .mDate { border: none; padding: 0; flex-direction: row; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem; }
+  .mTeams { flex-direction: column; gap: 0.5rem; }
+  .mTeam { width: auto; justify-content: center !important; text-align: center !important; }
+  .mStatus { text-align: center; }
+}
