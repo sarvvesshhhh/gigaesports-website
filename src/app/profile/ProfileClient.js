@@ -1,92 +1,99 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Shield, Zap, Award, MessageSquare } from 'lucide-react';
+import { Shield, Zap, Award, Send, Users, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
-import { getSocialDataAction } from './actions';
+import { sendMessageAction, getSocialDataAction } from './actions';
 import styles from './ProfilePage.module.css';
 
 export default function ProfileClient({ user, initialProfile }) {
+  const [activeChat, setActiveChat] = useState(null);
+  const [chatMsg, setChatMsg] = useState('');
+  const [messages, setMessages] = useState([]);
   const [friends, setFriends] = useState([]);
-
-  // Data mapping from Neon
-  const displayName = initialProfile?.username || user?.fullName || "Agent";
-  const xp = initialProfile?.xp || 0;
-  const level = Math.floor(xp / 100) + 1;
+  
+  // FIX: Properly map the Neon username
+  const realName = initialProfile?.username || user?.fullName || "Recruit";
+  const currentXP = initialProfile?.xp || 0;
+  const currentLevel = Math.floor(currentXP / 100) + 1;
 
   useEffect(() => {
-    async function load() {
+    async function loadSocial() {
       const data = await getSocialDataAction(user.id);
       if (data?.friends) setFriends(data.friends);
     }
-    load();
+    loadSocial();
   }, [user.id]);
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!chatMsg.trim() || !activeChat) return;
+
+    const newMsg = { text: chatMsg, sender: 'me', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+    setMessages([...messages, newMsg]);
+    setChatMsg('');
+
+    await sendMessageAction(user.id, activeChat.id, chatMsg);
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.grid}>
         
-        {/* LEFT: IDENTITY SECTION */}
-        <motion.div 
-          className={styles.playerCard3D}
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        {/* IDENTITY CARD */}
+        <motion.div className={styles.playerCard3D} initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}>
           <div className={styles.avatarRing}>
-            <Image 
-              src={initialProfile?.image_url || user?.imageUrl} 
-              width={160} height={160} 
-              className={styles.avatarImg} 
-              alt="Profile" 
-            />
-            <div className={styles.levelBadge}>LVL {level}</div>
+            <Image src={initialProfile?.image_url || user?.imageUrl} width={180} height={180} className={styles.avatarImg} alt="P" />
+            <div className={styles.levelBadge}>LVL {currentLevel}</div>
           </div>
+          <h1 className={styles.username}>{realName}</h1>
+          <p className={styles.rankTag}><Shield size={14} color="#00f2ff" /> GIGA ELITE</p>
           
-          <h1 className={styles.username}>{displayName}</h1>
-          <div className={styles.rankTag}><Shield size={14} color="#00f2ff" /> GIGA ELITE</div>
-
-          <div className={styles.xpContainer}>
-            <div className={styles.xpLabel}>
-              <span>XP {xp}</span>
-              <span>NEXT LVL</span>
-            </div>
-            <div className={styles.xpBarBackground}>
-              <motion.div 
-                className={styles.xpBarFill} 
-                initial={{ width: 0 }}
-                animate={{ width: `${xp % 100}%` }}
-              />
-            </div>
-          </div>
-
           <div className={styles.statsRow}>
             <div className={styles.statItem}><Zap size={18} color="#00f2ff"/> 0 Scrims</div>
             <div className={styles.statItem}><Award size={18} color="#ff0055"/> 0 Wins</div>
           </div>
         </motion.div>
 
-        {/* RIGHT: SOCIAL SECTION */}
-        <motion.div 
-          className={styles.socialCard}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <div className={styles.sectionHeader}>
-            <Users size={22} color="#00f2ff" />
-            <h2>ACTIVE AGENTS ({friends.length})</h2>
+        {/* SOCIAL & CHAT HUB */}
+        <div className={styles.socialCard}>
+          <div className={styles.chatArea}>
+            {!activeChat ? (
+              <div className={styles.emptyChat}>
+                <Users size={48} color="rgba(255,255,255,0.1)" />
+                <p>Select an Active Agent to start transmission</p>
+                <div className={styles.agentList}>
+                  {friends.map(f => (
+                    <button key={f.id} onClick={() => setActiveChat(f)} className={styles.agentBtn}>
+                      <Image src={f.avatar || '/default.png'} width={40} height={40} className={styles.fAvatar} alt="A"/>
+                      <span>{f.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              messages.map((m, i) => (
+                <div key={i} className={m.sender === 'me' ? styles.myMsg : styles.theirMsg}>
+                  {m.text}
+                </div>
+              ))
+            )}
           </div>
 
-          <div className={styles.friendList}>
-            {friends.map(f => (
-              <div key={f.id} className={styles.friendRow}>
-                <Image src={f.avatar || '/default.png'} width={45} height={45} className={styles.fAvatar} alt="Agent" />
-                <span className={styles.fName}>{f.name}</span>
-                <button className={styles.chatBtn}><MessageSquare size={18}/></button>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+          <form onSubmit={handleSend} className={styles.inputArea}>
+            <input 
+              className={styles.glowInput}
+              placeholder={activeChat ? `Message ${activeChat.name}...` : "Select an agent..."}
+              value={chatMsg}
+              onChange={(e) => setChatMsg(e.target.value)}
+              disabled={!activeChat}
+            />
+            <button type="submit" className={styles.sendBtn} disabled={!activeChat}>
+              <Send size={20} />
+            </button>
+          </form>
+        </div>
 
       </div>
     </div>
