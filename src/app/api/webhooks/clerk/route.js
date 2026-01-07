@@ -1,27 +1,34 @@
 import { Webhook } from 'svix';
+import { headers } from 'next/headers';
 import { db } from '@/db';
 import { profiles } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export async function POST(req) {
-  console.log("--- WEBHOOK ARRIVED ---"); // Add this
-  
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
-    return new Response('Missing Webhook Secret', { status: 400 });
+    console.error("❌ CLERK_WEBHOOK_SECRET is missing!");
+    return new Response('Error: Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to Vercel', { status: 500 });
   }
 
-  // Get headers for Svix verification
-  const headerPayload = req.headers;
+  // Get the headers
+  const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
+  if (!svix_id || !svix_timestamp || !svix_signature) {
+    return new Response('Error: Missing svix headers', { status: 400 });
+  }
+
+  // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
-  const wh = new Webhook(WEBHOOK_SECRET);
 
+  const wh = new Webhook(WEBHOOK_SECRET);
   let evt;
+
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -29,23 +36,41 @@ export async function POST(req) {
       "svix-signature": svix_signature,
     });
   } catch (err) {
-    console.error('Webhook verification failed:', err);
-    return new Response('Verification Error', { status: 400 });
+    console.error('❌ Webhook verification failed:', err.message);
+    return new Response('Error: Verification failed', { status: 400 });
   }
 
-  // Handle "User Created" Event
-  if (evt.type === 'user.created') {
-    const { id, first_name, last_name, image_url, email_addresses } = evt.data;
-    
+  const { id } = evt.data;
+  const eventType = evt.type;
+  console.log(`✅ Webhook received: ${eventType} for user ${id}`);
+
+  // 1. HANDLE USER CREATION
+  if (eventType === 'user.created') {
+    const { email_addresses, image_url, first_name, last_name } = evt.data;
+    const email = email_addresses[0]?.email_address;
+    const name = `${first_name || ''} ${last_name || ''}`.trim();
+
     await db.insert(profiles).values({
-      userId: id, // This is the Clerk ID (Text)
-      username: `${first_name} ${last_name}`,
-      email: email_addresses[0].email_address,
+      userId: id,
+      username: name || 'Agent',
+      email: email,
       imageUrl: image_url,
-    }).onConflictDoNothing(); // Prevents crashes if user already exists
+      xp: 0
+    }).onConflictDoNothing();
     
-    console.log(`Agent ${id} synced to Neon database.`);
+    console.log(`👤 Profile created for ${email}`);
   }
 
-  return new Response('Sync Success', { status: 200 });
+  // 2. HANDLE UPDATES
+  if (eventType === 'user.updated') {
+    const { image_url, first_name, last_name } = evt.data;
+    await db.update(profiles)
+      .set({ 
+        username: `${first_name} ${last_name}`, 
+        imageUrl: image_url 
+      })
+      .where(eq(profiles.userId, id));
+  }
+
+  return new Response('✅ Success', { status: 200 });
 }
